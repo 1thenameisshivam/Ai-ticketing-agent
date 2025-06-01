@@ -12,4 +12,5 @@ export const {
   MAILTRAP_SMTP_PASS,
   GEMINI_API_KEY,
   APP_URL,
+  NODE_ENV,
 } = process.env;

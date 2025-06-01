@@ -3,6 +3,7 @@ import cors from "cors";
 import { PORT } from "./config/constant.js";
 import { connectDB } from "./config/dbConnection.js";
 import CookieParser from "cookie-parser";
+import userRoutes from "./routes/user.routes.js";
 const app = express();
 
 app.use(cors());
@@ -13,6 +14,7 @@ app.get("/health-check", (req, res) => {
   res.status(200).json({ message: "Server is running smoothly!" });
 });
 
+app.use("/api/v1/users", userRoutes);
 // Connect to MongoDB
 connectDB()
   .then(() => {

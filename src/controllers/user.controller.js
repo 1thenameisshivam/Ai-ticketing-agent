@@ -4,6 +4,7 @@ import User from "../models/user.model.js";
 import { JWT_SECRET } from "../config/constant.js";
 import { inngest } from "../inngest/clint.js";
 import { NODE_ENV } from "../config/constant.js";
+
 export const userSignup = async (req, res) => {
   try {
     const { email, password, skills } = req.body;
