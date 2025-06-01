@@ -2,12 +2,13 @@ import express from "express";
 import cors from "cors";
 import { PORT } from "./config/constant.js";
 import { connectDB } from "./config/dbConnection.js";
-
+import CookieParser from "cookie-parser";
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-
+app.use(express.urlencoded({ extended: true }));
+app.use(CookieParser());
 app.get("/health-check", (req, res) => {
   res.status(200).json({ message: "Server is running smoothly!" });
 });
