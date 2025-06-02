@@ -8,7 +8,7 @@ import ticketRoutes from "./routes/ticket.routes.js";
 import { inngest } from "./inngest/clint.js";
 import { serve } from "inngest/express";
 import { onTicketCreated } from "./inngest/functions/onTicketCreated.js";
-import { onUserSignup } from "./inngest/functions/onUserSignup.js";
+import { onUserSignup } from "./inngest/functions/onSignup.js";
 
 const app = express();
 
@@ -26,8 +26,9 @@ app.use("/api/v1/tickets", ticketRoutes);
 
 // Inngest event handlers
 app.use(
-  "/api/v1/inngest",
-  serve(inngest, {
+  "/api/inngest",
+  serve({
+    client: inngest,
     functions: [onTicketCreated, onUserSignup],
   })
 );

@@ -4,7 +4,7 @@ import {
   MAILTRAP_SMTP_PASS,
   MAILTRAP_SMTP_PORT,
   MAILTRAP_SMTP_USER,
-} from "../config/constant";
+} from "../config/constant.js";
 
 export const sendEmail = async (to, subject, text) => {
   try {
