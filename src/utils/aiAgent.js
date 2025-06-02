@@ -51,7 +51,7 @@ Repeat: Do not wrap your output in markdown or code fences.`,
     
     - Title: ${ticket.title}
     - Description: ${ticket.description}`);
-  const raw = response.output[0].context;
+  const raw = response.output[0].content;
 
   try {
     const match = raw.match(/```json\s*([\s\S]*?)\s*```/i);
