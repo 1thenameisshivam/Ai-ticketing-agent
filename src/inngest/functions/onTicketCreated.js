@@ -14,7 +14,7 @@ export const onTicketCreated = inngest.createFunction(
 
       const ticket = await step.run("get ticket by ID", async () => {
         const ticketObject = await Ticket.findById(ticketId);
-        if (!ticket) {
+        if (!ticketObject) {
           throw new NonRetriableError("Ticket not found");
         }
         return ticketObject;
@@ -27,7 +27,6 @@ export const onTicketCreated = inngest.createFunction(
       });
 
       const aiResponse = await analyzeTicket(ticket);
-
       const relatedSkills = await step.run("ai processing", async () => {
         let skills = [];
         if (aiResponse) {
@@ -49,7 +48,7 @@ export const onTicketCreated = inngest.createFunction(
           role: "moderator",
           skills: {
             $elemMatch: {
-              $regex: relatedskills.join("|"),
+              $regex: relatedSkills.join("|"),
               $options: "i",
             },
           },

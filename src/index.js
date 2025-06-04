@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { PORT } from "./config/constant.js";
+import { APP_URL, PORT } from "./config/constant.js";
 import { connectDB } from "./config/dbConnection.js";
 import CookieParser from "cookie-parser";
 import userRoutes from "./routes/user.routes.js";
@@ -12,7 +12,12 @@ import { onUserSignup } from "./inngest/functions/onSignup.js";
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: APP_URL,
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(CookieParser());

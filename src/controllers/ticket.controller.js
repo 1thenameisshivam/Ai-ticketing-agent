@@ -11,16 +11,17 @@ export const createTicket = async (req, res) => {
         success: false,
       });
     }
-    const newTicket = Ticket.create({
+    const newTicket = await Ticket.create({
       title,
       description,
-      createdBy: req.user.userId.toString(), // Assuming req.user is set by authentication middleware
+      createdBy: req.user.userId, // Assuming req.user is set by authentication middleware
       deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Default deadline is 7 days from now
     });
+
     await inngest.send({
-      name: "ticket/create",
+      name: "ticket/created",
       data: {
-        ticketId: newTicket._id.toString(),
+        ticketId: newTicket._id,
       },
     });
     return res.status(201).json({
