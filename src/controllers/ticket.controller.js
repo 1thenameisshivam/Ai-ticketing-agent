@@ -42,14 +42,20 @@ export const getAllTickets = async (req, res) => {
   try {
     const { role } = req.user;
     let tickets = [];
-    if (role !== "user") {
+    if (role == "admin") {
       tickets = await Ticket.find()
         .populate("assignedTo", ["email", "_id"])
         .sort({ createdAt: -1 });
+    } else if (role == "moderator") {
+      tickets = await Ticket.find({ assignedTo: req.user.userId })
+        .populate("createdBy", ["email"])
+        .sort({ createdAt: -1 });
     } else {
       tickets = await Ticket.find({ createdBy: req.user.userId })
-        .select("title description status createdAt")
-        .sort({ createdAt: -1 });
+        .populate("assignedTo", ["email", "_id"])
+        .sort({
+          createdAt: -1,
+        });
     }
     return res.status(200).json({
       message: "Tickets fetched successfully",
