@@ -1,4 +1,3 @@
-import e from "express";
 import { inngest } from "../inngest/clint.js";
 import Ticket from "../models/ticket.model.js";
 
@@ -44,15 +43,18 @@ export const getAllTickets = async (req, res) => {
     let tickets = [];
     if (role == "admin") {
       tickets = await Ticket.find()
+        .populate("createdBy", ["email", "_id"])
         .populate("assignedTo", ["email", "_id"])
         .sort({ createdAt: -1 });
     } else if (role == "moderator") {
       tickets = await Ticket.find({ assignedTo: req.user.userId })
-        .populate("createdBy", ["email"])
+        .populate("createdBy", ["email", " _id"])
+        .populate("assignedTo", ["email", "_id"])
         .sort({ createdAt: -1 });
     } else {
       tickets = await Ticket.find({ createdBy: req.user.userId })
         .populate("assignedTo", ["email", "_id"])
+        .populate("createdBy", ["email", "_id"])
         .sort({
           createdAt: -1,
         });
