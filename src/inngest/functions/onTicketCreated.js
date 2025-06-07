@@ -13,7 +13,10 @@ export const onTicketCreated = inngest.createFunction(
       const { ticketId } = event.data;
 
       const ticket = await step.run("get ticket by ID", async () => {
-        const ticketObject = await Ticket.findById(ticketId);
+        const ticketObject = await Ticket.findById(ticketId).populate(
+          "createdBy",
+          ["email", "_id"]
+        );
         if (!ticketObject) {
           throw new NonRetriableError("Ticket not found");
         }
@@ -67,7 +70,11 @@ export const onTicketCreated = inngest.createFunction(
         const text = `👋Hello ${moderator.email},\n\nA new ticket has been assigned to you:\n\nTitle: ${ticket.title}\nDescription: ${ticket.description}\nPriority: ${ticket.priority}\n\nPlease check the ticket and take necessary actions.\n\nBest regards,\nThe Team`;
         await sendEmail(moderator.email, subject, text);
       });
-
+      await step.run("send email to user", async () => {
+        const subject = `Your Ticket has been created: ${ticket.title}`;
+        const text = `👋Hello ${ticket.createdBy.email},\n\nYour ticket has been successfully created and is now being assign to ${moderator.email} .\n\nTitle: ${ticket.title}\nDescription: ${ticket.description}\n\nWe will keep you updated on its status on to your ticket dashboard.\n\nBest regards,\nThe Team`;
+        await sendEmail(ticket.createdBy.email, subject, text);
+      });
       return { success: true };
     } catch (error) {
       console.error("❌Error in ticketCreated function:", error.message);
