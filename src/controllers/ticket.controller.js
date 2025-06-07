@@ -73,6 +73,57 @@ export const getAllTickets = async (req, res) => {
   }
 };
 
+export const closeTicket = async (req, res) => {
+  try {
+    const { ticketId } = req.params;
+    const { role } = req.user;
+    if (role == "user") {
+      return res.status(403).json({
+        message: "You do not have permission to close this ticket",
+        success: false,
+      });
+    }
+    if (!ticketId) {
+      return res.status(400).json({
+        message: "Ticket ID is required",
+        success: false,
+      });
+    }
+    const ticket = await Ticket.findById(ticketId);
+    if (!ticket) {
+      return res.status(404).json({
+        message: "Ticket not found",
+        success: false,
+      });
+    }
+    if (ticket.status === "closed") {
+      return res.status(400).json({
+        message: "Ticket is already closed",
+        success: false,
+      });
+    }
+    ticket.status = "closed";
+    await ticket.save();
+    await inngest.send({
+      name: "ticket/close",
+      data: {
+        ticketId,
+      },
+    });
+    return res.status(200).json({
+      message: "Ticket closed successfully 🎟️",
+      success: true,
+      ticket,
+    });
+  } catch (error) {
+    console.error("❌Error in closeTicket:", error.message);
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+    });
+  }
+};
+
 export const getTicket = async (req, res) => {
   try {
     const { role } = req.user;

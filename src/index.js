@@ -9,6 +9,7 @@ import { inngest } from "./inngest/clint.js";
 import { serve } from "inngest/express";
 import { onTicketCreated } from "./inngest/functions/onTicketCreated.js";
 import { onUserSignup } from "./inngest/functions/onSignup.js";
+import { onTicketClose } from "./inngest/functions/onTicketClose.js";
 
 const app = express();
 
@@ -34,7 +35,7 @@ app.use(
   "/api/inngest",
   serve({
     client: inngest,
-    functions: [onTicketCreated, onUserSignup],
+    functions: [onTicketCreated, onUserSignup, onTicketClose],
   })
 );
 // Connect to MongoDB
