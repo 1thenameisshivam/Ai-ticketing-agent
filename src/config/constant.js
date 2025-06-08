@@ -13,4 +13,5 @@ export const {
   GEMINI_API_KEY,
   APP_URL,
   NODE_ENV,
+  ARCJET_KEY,
 } = process.env;
