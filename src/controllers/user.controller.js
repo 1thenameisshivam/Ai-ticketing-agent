@@ -59,9 +59,10 @@ export const userSignup = async (req, res) => {
       sameSite: "strict", // Prevent CSRF attacks
     });
     // Respond with user data and token
-    return res
-      .status(201)
-      .json({ message: "User created successfully", success: true });
+    return res.status(201).json({
+      message: "User created successfully",
+      success: true,
+    });
   } catch (error) {
     console.error("❌Error in userSignup:", error.message);
     return res.status(500).json({ message: "Internal server error" });
@@ -96,7 +97,7 @@ export const userLogin = async (req, res) => {
       sameSite: "strict", // Prevent CSRF attacks
     });
     // Respond with user data and token
-    return res.status(200).json({ user, token });
+    return res.status(200).json({ token });
   } catch (error) {
     console.error("❌Error in userLogin:", error.message);
     return res.status(500).json({ message: "Internal server error" });
