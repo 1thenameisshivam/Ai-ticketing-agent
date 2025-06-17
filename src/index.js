@@ -11,7 +11,7 @@ import { onTicketCreated } from "./inngest/functions/onTicketCreated.js";
 import { onUserSignup } from "./inngest/functions/onSignup.js";
 import { onTicketClose } from "./inngest/functions/onTicketClose.js";
 
-const app = express();
+export const app = express();
 
 app.use(
   cors({
@@ -39,13 +39,13 @@ app.use(
   })
 );
 // Connect to MongoDB
-connectDB()
-  .then(() => {
-    app.listen(PORT || 4000, () => {
-      console.log(`🚀Server is running on port ${PORT || 4000}`);
-    });
-  })
-  .catch((error) => {
-    console.error("❌Failed to connect to MongoDB:", error.message);
-    process.exit(1); // Exit the process with failure
-  });
+// connectDB()
+//   .then(() => {
+//     app.listen(PORT || 4000, () => {
+//       console.log(`🚀Server is running on port ${PORT || 4000}`);
+//     });
+//   })
+//   .catch((error) => {
+//     console.error("❌Failed to connect to MongoDB:", error.message);
+//     process.exit(1); // Exit the process with failure
+//   });
