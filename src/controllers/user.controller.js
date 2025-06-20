@@ -64,7 +64,7 @@ export const userSignup = async (req, res) => {
       success: true,
     });
   } catch (error) {
-    console.error("❌Error in userSignup:", error.message);
+    console.error("❌Error in userSignup:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };

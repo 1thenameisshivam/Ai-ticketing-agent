@@ -38,14 +38,14 @@ app.use(
     functions: [onTicketCreated, onUserSignup, onTicketClose],
   })
 );
-// Connect to MongoDB
-// connectDB()
-//   .then(() => {
-//     app.listen(PORT || 4000, () => {
-//       console.log(`🚀Server is running on port ${PORT || 4000}`);
-//     });
-//   })
-//   .catch((error) => {
-//     console.error("❌Failed to connect to MongoDB:", error.message);
-//     process.exit(1); // Exit the process with failure
-//   });
+
+connectDB()
+  .then(() => {
+    app.listen(PORT || 4000, () => {
+      console.log(`🚀Server is running on port ${PORT || 4000}`);
+    });
+  })
+  .catch((error) => {
+    console.error("❌Failed to connect to MongoDB:", error.message);
+    process.exit(1); // Exit the process with failure
+  });

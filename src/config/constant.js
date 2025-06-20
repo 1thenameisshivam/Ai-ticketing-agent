@@ -14,4 +14,6 @@ export const {
   APP_URL,
   NODE_ENV,
   ARCJET_KEY,
+  INNGEST_EVENT_KEY,
+  INNGEST_ENV,
 } = process.env;

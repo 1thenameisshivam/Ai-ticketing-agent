@@ -6,6 +6,9 @@ let mongo;
 //Firstly we get the mongo uri from the MongoMemoryServer instance
 // and then we connect to it using mongoose.
 beforeAll(async () => {
+  if (mongoose.connection.readyState !== 0) {
+    await mongoose.disconnect();
+  }
   mongo = await MongoMemoryServer.create();
   const uri = mongo.getUri();
   await mongoose.connect(uri, {});

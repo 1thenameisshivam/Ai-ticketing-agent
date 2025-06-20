@@ -9,6 +9,7 @@ export const onUserSignup = inngest.createFunction(
   async ({ event, step }) => {
     try {
       const { email } = event.data;
+      console.log(email);
       await step.run("get user by email", async () => {
         const user = await User.findOne({ email });
         if (!user) {
