@@ -8,7 +8,7 @@ import { aj } from "../utils/arcjet.js";
 export const userSignup = async (req, res) => {
   try {
     const { email, password, skills } = req.body;
-    const ci = process.env.CI === "true";
+    const ci = CI === "true";
     // Validate input
     if (!email || !password) {
       return res
@@ -102,7 +102,7 @@ export const userLogin = async (req, res) => {
       sameSite: "strict", // Prevent CSRF attacks
     });
     // Respond with user data and token
-    return res.status(200).json({ token });
+    return res.status(200).json({ message: "Login successful", success: true });
   } catch (error) {
     console.error("❌Error in userLogin:", error.message);
     return res.status(500).json({ message: "Internal server error" });
