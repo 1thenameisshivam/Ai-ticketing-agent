@@ -1,22 +1,23 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
-import { JWT_SECRET } from "../config/constant.js";
+import { CI, JWT_SECRET } from "../config/constant.js";
 import { inngest } from "../inngest/clint.js";
 import { NODE_ENV } from "../config/constant.js";
 import { aj } from "../utils/arcjet.js";
 export const userSignup = async (req, res) => {
   try {
     const { email, password, skills } = req.body;
+    const ci = process.env.CI === "true";
     // Validate input
     if (!email || !password) {
       return res
         .status(400)
         .json({ message: "Email and password are required" });
     }
-    // Check if email is valid
+    //Check if email is valid
     const decision = await aj.protect(req, { email });
-    if (decision.isDenied()) {
+    if (decision.isDenied() && !ci) {
       if (decision.reason.isEmail()) {
         // If the email is invalid then return an error message
         return res
@@ -41,12 +42,16 @@ export const userSignup = async (req, res) => {
     });
     const savedUser = await newUser.save();
     // Trigger Inngest function for user signup
-    await inngest.send({
-      name: "user/signup",
-      data: {
-        email: savedUser.email,
-      },
-    });
+
+    if (!ci) {
+      await inngest.send({
+        name: "user/signup",
+        data: {
+          email: savedUser.email,
+        },
+      });
+    }
+
     // Generate JWT token
     const token = jwt.sign(
       { userId: savedUser._id, role: savedUser.role },

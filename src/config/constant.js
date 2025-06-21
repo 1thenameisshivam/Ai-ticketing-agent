@@ -1,6 +1,5 @@
-import dotenv from "dotenv";
-
-dotenv.config();
+import DotenvFlow from "dotenv-flow";
+DotenvFlow.config();
 
 export const {
   MONGO_URI,
@@ -16,4 +15,5 @@ export const {
   ARCJET_KEY,
   INNGEST_EVENT_KEY,
   INNGEST_ENV,
+  CI,
 } = process.env;
