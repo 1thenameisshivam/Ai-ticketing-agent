@@ -4,6 +4,7 @@ import Ticket from "../../models/ticket.model.js";
 import { NonRetriableError } from "inngest";
 import { sendEmail } from "../../utils/mailer.js";
 import analyzeTicket from "../../utils/aiAgent.js";
+import { GEMINI_API_KEY } from "../../config/constant.js";
 
 export const onTicketCreated = inngest.createFunction(
   { id: "on-Ticket-Created", retries: 2 },
@@ -11,25 +12,30 @@ export const onTicketCreated = inngest.createFunction(
   async ({ event, step }) => {
     try {
       const { ticketId } = event.data;
-
       const ticket = await step.run("get ticket by ID", async () => {
         const ticketObject = await Ticket.findById(ticketId).populate(
           "createdBy",
           ["email", "_id"]
         );
+
         if (!ticketObject) {
           throw new NonRetriableError("Ticket not found");
         }
         return ticketObject;
       });
-
       await step.run("update ticket ststus", async () => {
         await Ticket.findByIdAndUpdate(ticketId, {
           status: "open",
         });
       });
+      let aiResponse;
+      try {
+        aiResponse = await analyzeTicket(ticket);
+      } catch (err) {
+        console.error("🔥 Gemini API call failed:", err);
+        throw err; // to make Inngest show error
+      }
 
-      const aiResponse = await analyzeTicket(ticket);
       const relatedSkills = await step.run("ai processing", async () => {
         let skills = [];
         if (aiResponse) {
@@ -56,6 +62,7 @@ export const onTicketCreated = inngest.createFunction(
             },
           },
         });
+
         if (!user) {
           user = await User.findOne({ role: "admin" });
         }
