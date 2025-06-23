@@ -12,6 +12,7 @@ jobs:
       NODE_ENV: test
       CI: true
       MONGO_MS_VERSION: 6.0.6
+      MONGOMS_DOWNLOAD_URL: https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2204-6.0.6.tgz
 
     steps:
       # Step 1: Checkout code
@@ -28,19 +29,24 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Step 4: Create .env.test file
+      # Step 4: Write .env.test from GitHub Secret
       - name: Create .env.test
-        run: echo "${{ secrets.ENV_TEST }}" > .env.test
+        run: |
+          echo "${{ secrets.ENV_TEST }}" > .env.test
+          echo ".env.test created with secrets ✅"
 
-      # Step 5: Run tests
+      # Step 5: Run tests with NODE_ENV=test
       - name: Run tests
-        run: NODE_ENV=test npm test -- --forceExit --detectOpenHandles
+        run: |
+          NODE_ENV=test npm test -- --runInBand --forceExit --detectOpenHandles
+        env:
+          NODE_ENV: test
 
       # Step 6: Docker build
       - name: Build Docker image
         run: docker build -t 1thenameisshivam/agentra:latest .
 
-      # Step 7: Login to Docker Hub
+      # Step 7: Docker Hub Login
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -51,8 +57,8 @@ jobs:
       - name: Push image to Docker Hub
         run: docker push 1thenameisshivam/agentra:latest
 
-      # Step 9: Deploy to EC2
-      - name: Deploy to EC2
+      # Step 9: Deploy to Azure VM
+      - name: Deploy to Azure instance via SSH
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.AZURE_HOST }}
@@ -62,4 +68,4 @@ jobs:
             cd ~/Ai-ticketing-agent
             git pull origin main
             docker compose pull
-            docker compose up -d
+            docker compose up -d --build
