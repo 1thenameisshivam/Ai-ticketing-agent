@@ -16,6 +16,8 @@ beforeAll(async () => {
 
 // After each test, we clear the database
 afterEach(async () => {
+  if (!mongoose.connection?.db) return;
+
   const collections = await mongoose.connection.db.collections();
   for (let collection of collections) {
     await collection.deleteMany({});
