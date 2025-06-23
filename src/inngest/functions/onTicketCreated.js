@@ -4,7 +4,6 @@ import Ticket from "../../models/ticket.model.js";
 import { NonRetriableError } from "inngest";
 import { sendEmail } from "../../utils/mailer.js";
 import analyzeTicket from "../../utils/aiAgent.js";
-import { GEMINI_API_KEY } from "../../config/constant.js";
 
 export const onTicketCreated = inngest.createFunction(
   { id: "on-Ticket-Created", retries: 2 },

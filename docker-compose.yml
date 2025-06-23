@@ -11,8 +11,7 @@ services:
     networks:
       - agentraNetwork
   agentra_backend:
-    build:
-      context: .
+    image: 1thenameisshivam/agentra:latest
     container_name: agentra_backend
     depends_on:
       - mongodb
