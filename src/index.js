@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { APP_URL, PORT } from "./config/constant.js";
+import { APP_URL, CI, PORT } from "./config/constant.js";
 import { connectDB } from "./config/dbConnection.js";
 import CookieParser from "cookie-parser";
 import userRoutes from "./routes/user.routes.js";
@@ -40,13 +40,15 @@ app.use(
   })
 );
 
-connectDB()
-  .then(() => {
-    app.listen(PORT || 4000, () => {
-      console.log(`🚀Server is running on port ${PORT || 4000}`);
+if (!CI) {
+  connectDB()
+    .then(() => {
+      app.listen(PORT || 4000, () => {
+        console.log(`🚀Server is running on port ${PORT || 4000}`);
+      });
+    })
+    .catch((error) => {
+      console.error("❌Failed to connect to MongoDB:", error.message);
+      process.exit(1); // Exit the process with failure
     });
-  })
-  .catch((error) => {
-    console.error("❌Failed to connect to MongoDB:", error.message);
-    process.exit(1); // Exit the process with failure
-  });
+}

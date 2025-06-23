@@ -8,7 +8,7 @@
     "dev": "nodemon",
     "start": "node  src/index.js",
     "inngest-dev": "npx inngest-cli@latest dev",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js "
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --forceExit --detectOpenHandles"
   },
   "keywords": [],
   "author": "",
