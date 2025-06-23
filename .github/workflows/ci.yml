@@ -11,6 +11,7 @@ jobs:
     env:
       NODE_ENV: test
       CI: true
+      MONGO_MS_VERSION: 6.0.6
 
     steps:
       # Step 1: Checkout code
@@ -33,7 +34,7 @@ jobs:
 
       # Step 5: Run tests
       - name: Run tests
-        run: NODE_ENV=test npm test
+        run: NODE_ENV=test npm test -- --forceExit --detectOpenHandles
 
       # Step 6: Docker build
       - name: Build Docker image
