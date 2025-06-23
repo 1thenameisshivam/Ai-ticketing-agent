@@ -16,8 +16,9 @@ export const userSignup = async (req, res) => {
         .json({ message: "Email and password are required" });
     }
     //Check if email is valid
-    const decision = await aj.protect(req, { email });
+
     if (decision.isDenied() && !ci) {
+      const decision = await aj.protect(req, { email });
       if (decision.reason.isEmail()) {
         // If the email is invalid then return an error message
         return res

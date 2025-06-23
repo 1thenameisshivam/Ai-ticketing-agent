@@ -12,7 +12,7 @@ import { onUserSignup } from "./inngest/functions/onSignup.js";
 import { onTicketClose } from "./inngest/functions/onTicketClose.js";
 
 export const app = express();
-
+const ci = CI === "true";
 app.use(
   cors({
     origin: APP_URL,
@@ -40,7 +40,7 @@ app.use(
   })
 );
 
-if (!CI) {
+if (!ci) {
   connectDB()
     .then(() => {
       app.listen(PORT || 4000, () => {
